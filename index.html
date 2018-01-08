@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>todo</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://bootswatch.com/4/litera/bootstrap.min.css">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    
+  </head>
+  <body>
+      
+      
+    <div id="app"></div>
+    <script>
+      //fb stuff
+      // This is called with the results from from FB.getLoginStatus().
+      function statusChangeCallback(response) {
+          
+      if (response.status === 'connected') {
+          testAPI()
+        //   console.log(response);
+          
+      
+      } else {
+
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this app.';
+      }
+      }
+
+      function checkLoginState() {
+      FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+      });
+      }
+
+      window.fbAsyncInit = function() {
+      FB.init({
+      appId      : '857148194465924',
+      cookie     : true,  
+      xfbml      : true,  
+      version    : 'v2.11' ,
+      scope      : 'email'
+      });
+
+
+      FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+      });
+
+      };
+
+
+      (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+
+      function testAPI() {
+      console.log('Welcome!  Fetching your information.... ');
+      FB.api('/me',function(response) {
+      console.log('Successful login for: ' + response.name);
+      console.log(response);
+      axios.post('http://35.198.200.36/login/FB',{
+          email:response.name,
+          password:response.id
+      })
+      .then(response=>{
+          console.log(response);
+          localStorage.setItem('jwtToken',response.data.token)
+          location.reload()
+      })
+      .catch(err=>{
+          console.log(err);
+      })
+
+      });
+      }
+      
+      function axiosFb(){
+          
+      }
+
+      FB.logout(function(response) {
+      // Person is now logged out
+      });
+
+  </script>
+
+    <!-- built files will be auto injected -->
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Bootstrap Js CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Custom Scroller Js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+  </body>
+</html>
